@@ -472,7 +472,7 @@ document.getElementById('addCustomExercise').addEventListener('click', async () 
     const name = prompt('Exercise name:');
     if (!name) return;
     
-    const muscleGroup = prompt('Muscle group (Chest, Back, Legs, Shoulders, Arms):');
+    const muscleGroup = prompt('Muscle group (Chest, Back, Legs, Shoulders, Arms, Core):');
     if (!muscleGroup) return;
     
     try {
@@ -483,6 +483,18 @@ document.getElementById('addCustomExercise').addEventListener('click', async () 
     } catch (e) {
         alert('Exercise already exists');
     }
+});
+
+// Reset exercises
+document.getElementById('resetExercises').addEventListener('click', async () => {
+    if (!confirm('This will reset to 90+ default exercises. Your custom exercises will be removed. Continue?')) {
+        return;
+    }
+    
+    const count = await db.resetExercises();
+    exercises = await db.getAllExercises();
+    loadExerciseList();
+    alert(`Reset complete! ${count} exercises loaded.`);
 });
 
 // Export

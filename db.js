@@ -264,5 +264,137 @@ class IronDB {
     }
 }
 
+// Default exercises list (for reset)
+    getDefaultExercises() {
+        return [
+            // Chest
+            { name: 'Bench Press', muscleGroup: 'Chest' },
+            { name: 'Incline Bench Press', muscleGroup: 'Chest' },
+            { name: 'Decline Bench Press', muscleGroup: 'Chest' },
+            { name: 'Dumbbell Press', muscleGroup: 'Chest' },
+            { name: 'Incline Dumbbell Press', muscleGroup: 'Chest' },
+            { name: 'Dumbbell Fly', muscleGroup: 'Chest' },
+            { name: 'Cable Fly', muscleGroup: 'Chest' },
+            { name: 'Cable Crossover', muscleGroup: 'Chest' },
+            { name: 'Chest Dip', muscleGroup: 'Chest' },
+            { name: 'Push-up', muscleGroup: 'Chest' },
+            { name: 'Machine Chest Press', muscleGroup: 'Chest' },
+            { name: 'Pec Deck', muscleGroup: 'Chest' },
+            // Back
+            { name: 'Deadlift', muscleGroup: 'Back' },
+            { name: 'Barbell Row', muscleGroup: 'Back' },
+            { name: 'Dumbbell Row', muscleGroup: 'Back' },
+            { name: 'Pull-up', muscleGroup: 'Back' },
+            { name: 'Chin-up', muscleGroup: 'Back' },
+            { name: 'Lat Pulldown', muscleGroup: 'Back' },
+            { name: 'Close Grip Lat Pulldown', muscleGroup: 'Back' },
+            { name: 'Seated Cable Row', muscleGroup: 'Back' },
+            { name: 'T-Bar Row', muscleGroup: 'Back' },
+            { name: 'Pendlay Row', muscleGroup: 'Back' },
+            { name: 'Meadows Row', muscleGroup: 'Back' },
+            { name: 'Chest Supported Row', muscleGroup: 'Back' },
+            { name: 'Rack Pull', muscleGroup: 'Back' },
+            { name: 'Good Morning', muscleGroup: 'Back' },
+            { name: 'Back Extension', muscleGroup: 'Back' },
+            { name: 'Straight Arm Pulldown', muscleGroup: 'Back' },
+            { name: 'Shrug', muscleGroup: 'Back' },
+            // Legs
+            { name: 'Squat', muscleGroup: 'Legs' },
+            { name: 'Front Squat', muscleGroup: 'Legs' },
+            { name: 'Goblet Squat', muscleGroup: 'Legs' },
+            { name: 'Hack Squat', muscleGroup: 'Legs' },
+            { name: 'Leg Press', muscleGroup: 'Legs' },
+            { name: 'Romanian Deadlift', muscleGroup: 'Legs' },
+            { name: 'Stiff Leg Deadlift', muscleGroup: 'Legs' },
+            { name: 'Sumo Deadlift', muscleGroup: 'Legs' },
+            { name: 'Bulgarian Split Squat', muscleGroup: 'Legs' },
+            { name: 'Lunge', muscleGroup: 'Legs' },
+            { name: 'Walking Lunge', muscleGroup: 'Legs' },
+            { name: 'Step Up', muscleGroup: 'Legs' },
+            { name: 'Leg Curl', muscleGroup: 'Legs' },
+            { name: 'Seated Leg Curl', muscleGroup: 'Legs' },
+            { name: 'Leg Extension', muscleGroup: 'Legs' },
+            { name: 'Hip Thrust', muscleGroup: 'Legs' },
+            { name: 'Glute Bridge', muscleGroup: 'Legs' },
+            { name: 'Cable Kickback', muscleGroup: 'Legs' },
+            { name: 'Hip Abduction', muscleGroup: 'Legs' },
+            { name: 'Hip Adduction', muscleGroup: 'Legs' },
+            { name: 'Calf Raise', muscleGroup: 'Legs' },
+            { name: 'Seated Calf Raise', muscleGroup: 'Legs' },
+            // Shoulders
+            { name: 'Overhead Press', muscleGroup: 'Shoulders' },
+            { name: 'Seated Dumbbell Press', muscleGroup: 'Shoulders' },
+            { name: 'Arnold Press', muscleGroup: 'Shoulders' },
+            { name: 'Push Press', muscleGroup: 'Shoulders' },
+            { name: 'Lateral Raise', muscleGroup: 'Shoulders' },
+            { name: 'Cable Lateral Raise', muscleGroup: 'Shoulders' },
+            { name: 'Front Raise', muscleGroup: 'Shoulders' },
+            { name: 'Rear Delt Fly', muscleGroup: 'Shoulders' },
+            { name: 'Face Pull', muscleGroup: 'Shoulders' },
+            { name: 'Upright Row', muscleGroup: 'Shoulders' },
+            { name: 'Machine Shoulder Press', muscleGroup: 'Shoulders' },
+            { name: 'Lu Raise', muscleGroup: 'Shoulders' },
+            // Arms - Biceps
+            { name: 'Bicep Curl', muscleGroup: 'Arms' },
+            { name: 'Dumbbell Curl', muscleGroup: 'Arms' },
+            { name: 'Hammer Curl', muscleGroup: 'Arms' },
+            { name: 'Preacher Curl', muscleGroup: 'Arms' },
+            { name: 'Incline Dumbbell Curl', muscleGroup: 'Arms' },
+            { name: 'Concentration Curl', muscleGroup: 'Arms' },
+            { name: 'Cable Curl', muscleGroup: 'Arms' },
+            { name: 'EZ Bar Curl', muscleGroup: 'Arms' },
+            { name: 'Spider Curl', muscleGroup: 'Arms' },
+            // Arms - Triceps
+            { name: 'Tricep Pushdown', muscleGroup: 'Arms' },
+            { name: 'Rope Pushdown', muscleGroup: 'Arms' },
+            { name: 'Skull Crusher', muscleGroup: 'Arms' },
+            { name: 'Close Grip Bench Press', muscleGroup: 'Arms' },
+            { name: 'Tricep Dip', muscleGroup: 'Arms' },
+            { name: 'Overhead Tricep Extension', muscleGroup: 'Arms' },
+            { name: 'Cable Overhead Extension', muscleGroup: 'Arms' },
+            { name: 'Diamond Push-up', muscleGroup: 'Arms' },
+            { name: 'Tricep Kickback', muscleGroup: 'Arms' },
+            // Arms - Forearms
+            { name: 'Wrist Curl', muscleGroup: 'Arms' },
+            { name: 'Reverse Wrist Curl', muscleGroup: 'Arms' },
+            { name: 'Farmers Walk', muscleGroup: 'Arms' },
+            // Core
+            { name: 'Plank', muscleGroup: 'Core' },
+            { name: 'Crunch', muscleGroup: 'Core' },
+            { name: 'Cable Crunch', muscleGroup: 'Core' },
+            { name: 'Hanging Leg Raise', muscleGroup: 'Core' },
+            { name: 'Leg Raise', muscleGroup: 'Core' },
+            { name: 'Ab Wheel Rollout', muscleGroup: 'Core' },
+            { name: 'Russian Twist', muscleGroup: 'Core' },
+            { name: 'Woodchop', muscleGroup: 'Core' },
+            { name: 'Dead Bug', muscleGroup: 'Core' },
+            { name: 'Bird Dog', muscleGroup: 'Core' },
+            { name: 'Pallof Press', muscleGroup: 'Core' },
+            { name: 'Decline Sit-up', muscleGroup: 'Core' },
+        ];
+    }
+
+    async resetExercises() {
+        // Clear existing exercises
+        const tx = this.db.transaction('exercises', 'readwrite');
+        await new Promise((resolve, reject) => {
+            const req = tx.objectStore('exercises').clear();
+            req.onsuccess = resolve;
+            req.onerror = reject;
+        });
+        
+        // Add all defaults
+        const defaults = this.getDefaultExercises();
+        for (const ex of defaults) {
+            try {
+                await this.addExercise(ex);
+            } catch (e) {
+                // Ignore duplicates
+            }
+        }
+        return defaults.length;
+    }
+}
+
 // Global instance
 const db = new IronDB();
