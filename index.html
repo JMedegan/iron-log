@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>Iron Log</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header>
+            <h1>🏋️ Iron Log</h1>
+            <button id="exportBtn" class="icon-btn" title="Export Data">📤</button>
+        </header>
+
+        <!-- Navigation -->
+        <nav>
+            <button class="nav-btn active" data-view="log">Log</button>
+            <button class="nav-btn" data-view="history">History</button>
+            <button class="nav-btn" data-view="stats">Stats</button>
+            <button class="nav-btn" data-view="exercises">Exercises</button>
+        </nav>
+
+        <!-- Log View -->
+        <section id="log-view" class="view active">
+            <div class="date-picker">
+                <button id="prevDay" class="icon-btn">◀</button>
+                <input type="date" id="workoutDate">
+                <button id="nextDay" class="icon-btn">▶</button>
+            </div>
+            
+            <div id="workout-entries"></div>
+            
+            <button id="addExercise" class="primary-btn">+ Add Exercise</button>
+        </section>
+
+        <!-- History View -->
+        <section id="history-view" class="view">
+            <div id="history-list"></div>
+        </section>
+
+        <!-- Stats View -->
+        <section id="stats-view" class="view">
+            <div class="stat-card">
+                <h3>Total Workouts</h3>
+                <span id="totalWorkouts">0</span>
+            </div>
+            <div class="stat-card">
+                <h3>This Week</h3>
+                <span id="weekWorkouts">0</span>
+            </div>
+            <div class="stat-card">
+                <h3>Total Volume (kg)</h3>
+                <span id="totalVolume">0</span>
+            </div>
+            <div class="chart-container">
+                <h3>Weekly Volume</h3>
+                <canvas id="volumeChart"></canvas>
+            </div>
+            <div id="pr-list">
+                <h3>🏆 Personal Records</h3>
+                <div id="prs"></div>
+            </div>
+        </section>
+
+        <!-- Exercises View -->
+        <section id="exercises-view" class="view">
+            <input type="text" id="exerciseSearch" placeholder="Search or add exercise...">
+            <div id="exercise-list"></div>
+            <button id="addCustomExercise" class="secondary-btn">+ Add Custom Exercise</button>
+        </section>
+
+        <!-- Add Exercise Modal -->
+        <div id="exerciseModal" class="modal">
+            <div class="modal-content">
+                <h2>Select Exercise</h2>
+                <input type="text" id="modalExerciseSearch" placeholder="Search...">
+                <div id="modalExerciseList"></div>
+                <button class="secondary-btn close-modal">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Add Set Modal -->
+        <div id="setModal" class="modal">
+            <div class="modal-content">
+                <h2 id="setModalTitle">Add Set</h2>
+                <div class="input-group">
+                    <label>Weight (kg)</label>
+                    <div class="stepper">
+                        <button class="stepper-btn" data-delta="-2.5">-</button>
+                        <input type="number" id="setWeight" step="0.5" min="0" value="20">
+                        <button class="stepper-btn" data-delta="2.5">+</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Reps</label>
+                    <div class="stepper">
+                        <button class="stepper-btn" data-delta="-1">-</button>
+                        <input type="number" id="setReps" step="1" min="1" value="10">
+                        <button class="stepper-btn" data-delta="1">+</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>RPE (optional)</label>
+                    <input type="range" id="setRPE" min="5" max="10" step="0.5" value="7">
+                    <span id="rpeValue">7</span>
+                </div>
+                <div class="modal-actions">
+                    <button class="secondary-btn close-modal">Cancel</button>
+                    <button id="saveSet" class="primary-btn">Save Set</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

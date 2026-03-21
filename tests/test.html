@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Iron Log Tests</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a2e; color: #eaeaea; }
+        .pass { color: #4ade80; }
+        .fail { color: #e94560; }
+        pre { background: #16213e; padding: 10px; border-radius: 8px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Iron Log Tests</h1>
+    <div id="results"></div>
+    
+    <script src="../db.js"></script>
+    <script>
+        const results = document.getElementById('results');
+        let passed = 0;
+        let failed = 0;
+        
+        function log(msg, success = true) {
+            const div = document.createElement('div');
+            div.className = success ? 'pass' : 'fail';
+            div.textContent = (success ? '✓ ' : '✗ ') + msg;
+            results.appendChild(div);
+            if (success) passed++; else failed++;
+        }
+        
+        function assert(condition, msg) {
+            if (condition) {
+                log(msg);
+            } else {
+                log(msg, false);
+            }
+        }
+        
+        async function runTests() {
+            log('Starting tests...');
+            
+            // Test 1: DB initialization
+            try {
+                await db.init();
+                log('DB initialized');
+            } catch (e) {
+                log('DB init failed: ' + e.message, false);
+                return;
+            }
+            
+            // Test 2: Default exercises loaded
+            const exercises = await db.getAllExercises();
+            assert(exercises.length >= 20, `Default exercises loaded (${exercises.length} found)`);
+            
+            // Test 3: Has expected muscle groups
+            const groups = [...new Set(exercises.map(e => e.muscleGroup))];
+            assert(groups.includes('Chest'), 'Has Chest exercises');
+            assert(groups.includes('Back'), 'Has Back exercises');
+            assert(groups.includes('Legs'), 'Has Legs exercises');
+            
+            // Test 4: Can save a workout
+            const testWorkout = {
+                date: '2026-01-01',
+                exercises: [{
+                    name: 'Test Bench',
+                    sets: [
+                        { weight: 60, reps: 10 },
+                        { weight: 80, reps: 8, rpe: 8 }
+                    ]
+                }]
+            };
+            await db.saveWorkout(testWorkout);
+            log('Workout saved');
+            
+            // Test 5: Can retrieve workout
+            const retrieved = await db.getWorkoutByDate('2026-01-01');
+            assert(retrieved !== null, 'Workout retrieved');
+            assert(retrieved.exercises[0].name === 'Test Bench', 'Exercise name correct');
+            assert(retrieved.exercises[0].sets.length === 2, 'Sets count correct');
+            
+            // Test 6: Can update workout (same date)
+            testWorkout.exercises[0].sets.push({ weight: 85, reps: 6 });
+            await db.saveWorkout(testWorkout);
+            const updated = await db.getWorkoutByDate('2026-01-01');
+            assert(updated.exercises[0].sets.length === 3, 'Workout updated (3 sets)');
+            
+            // Test 7: Export contains data
+            const exported = await db.exportData();
+            assert(exported.exercises.length > 0, 'Export has exercises');
+            assert(exported.workouts.length > 0, 'Export has workouts');
+            assert(exported.exportedAt, 'Export has timestamp');
+            
+            // Test 8: Volume calculation
+            let volume = 0;
+            updated.exercises.forEach(ex => {
+                ex.sets.forEach(s => {
+                    volume += s.weight * s.reps;
+                });
+            });
+            assert(volume === (60*10 + 80*8 + 85*6), `Volume calculation correct (${volume})`);
+            
+            // Test 9: Delete workout
+            await db.deleteWorkout(updated.id);
+            const deleted = await db.getWorkoutByDate('2026-01-01');
+            assert(deleted === null, 'Workout deleted');
+            
+            // Test 10: Add custom exercise
+            try {
+                await db.addExercise({ name: 'Test Exercise', muscleGroup: 'Test' });
+                const updated = await db.getAllExercises();
+                const found = updated.find(e => e.name === 'Test Exercise');
+                assert(found !== undefined, 'Custom exercise added');
+            } catch (e) {
+                log('Add custom exercise failed: ' + e.message, false);
+            }
+            
+            // Summary
+            const summary = document.createElement('pre');
+            summary.innerHTML = `\n━━━━━━━━━━━━━━━━━━━━━━━━━━\nPassed: ${passed}  Failed: ${failed}\n━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+            results.appendChild(summary);
+        }
+        
+        runTests();
+    </script>
+</body>
+</html>
