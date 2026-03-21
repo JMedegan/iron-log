@@ -1,0 +1,92 @@
+{
+  "name": "Fat Loss + Muscle Building",
+  "goal": "Primary: Fat Loss | Secondary: Muscle Building",
+  "frequency": "4 days/week",
+  "duration": "~55 min per session",
+  "structure": "Upper/Lower Split",
+  "notes": "Rest 60-90s between sets. Supersets marked with same letter (A1/A2) - do back to back with no rest, then rest 60s.",
+  "days": [
+    {
+      "day": "Day 1",
+      "name": "Lower A (Quad Focus)",
+      "warmup": "5 min: bike/jump rope/walking lunges",
+      "exercises": [
+        { "id": "A1", "name": "Squat", "sets": 4, "reps": "6-8", "rest": "90s", "notes": "Main lift - go heavy" },
+        { "id": "B1", "name": "Romanian Deadlift", "sets": 3, "reps": "10-12", "rest": "60s", "notes": "Slow eccentric 3s down" },
+        { "id": "B2", "name": "Walking Lunge", "sets": 3, "reps": "12 each leg", "rest": "60s", "notes": "Superset with B1" },
+        { "id": "C1", "name": "Leg Extension", "sets": 3, "reps": "12-15", "rest": "45s", "notes": "Squeeze at top" },
+        { "id": "C2", "name": "Leg Curl", "sets": 3, "reps": "12-15", "rest": "45s", "notes": "Superset with C1" },
+        { "id": "D", "name": "Calf Raise", "sets": 3, "reps": "15-20", "rest": "45s", "notes": "Pause at bottom stretch" }
+      ],
+      "finisher": "Optional: 10 min incline walk or stair climber"
+    },
+    {
+      "day": "Day 2",
+      "name": "Upper A (Push Focus)",
+      "warmup": "5 min: arm circles, band pull-aparts, light push-ups",
+      "exercises": [
+        { "id": "A1", "name": "Bench Press", "sets": 4, "reps": "6-8", "rest": "90s", "notes": "Main lift - go heavy" },
+        { "id": "B1", "name": "Dumbbell Row", "sets": 3, "reps": "10-12 each", "rest": "60s", "notes": "Pull to hip" },
+        { "id": "B2", "name": "Incline Dumbbell Press", "sets": 3, "reps": "10-12", "rest": "60s", "notes": "Superset with B1" },
+        { "id": "C1", "name": "Lat Pulldown", "sets": 3, "reps": "10-12", "rest": "45s", "notes": "Full stretch at top" },
+        { "id": "C2", "name": "Lateral Raise", "sets": 3, "reps": "12-15", "rest": "45s", "notes": "Superset with C1" },
+        { "id": "D1", "name": "Tricep Pushdown", "sets": 2, "reps": "12-15", "rest": "30s", "notes": "" },
+        { "id": "D2", "name": "Bicep Curl", "sets": 2, "reps": "12-15", "rest": "30s", "notes": "Superset with D1" }
+      ],
+      "finisher": ""
+    },
+    {
+      "day": "Day 3",
+      "name": "REST",
+      "warmup": "",
+      "exercises": [],
+      "finisher": "Optional: 20-30 min walk, stretching, or active recovery"
+    },
+    {
+      "day": "Day 4",
+      "name": "Lower B (Hip/Posterior Focus)",
+      "warmup": "5 min: glute bridges, leg swings, bodyweight squats",
+      "exercises": [
+        { "id": "A1", "name": "Deadlift", "sets": 4, "reps": "5-6", "rest": "90-120s", "notes": "Main lift - focus on form" },
+        { "id": "B1", "name": "Bulgarian Split Squat", "sets": 3, "reps": "10 each leg", "rest": "60s", "notes": "Hold dumbbells" },
+        { "id": "B2", "name": "Hip Thrust", "sets": 3, "reps": "12-15", "rest": "60s", "notes": "Superset with B1, squeeze glutes hard" },
+        { "id": "C1", "name": "Leg Press", "sets": 3, "reps": "12-15", "rest": "60s", "notes": "Feet high for hamstrings" },
+        { "id": "C2", "name": "Seated Leg Curl", "sets": 3, "reps": "12-15", "rest": "45s", "notes": "Superset with C1" },
+        { "id": "D", "name": "Seated Calf Raise", "sets": 3, "reps": "15-20", "rest": "45s", "notes": "" }
+      ],
+      "finisher": "Optional: 10 min rowing or bike intervals (30s hard/30s easy)"
+    },
+    {
+      "day": "Day 5",
+      "name": "Upper B (Pull Focus)",
+      "warmup": "5 min: band work, face pulls, arm circles",
+      "exercises": [
+        { "id": "A1", "name": "Barbell Row", "sets": 4, "reps": "6-8", "rest": "90s", "notes": "Main lift - go heavy" },
+        { "id": "B1", "name": "Overhead Press", "sets": 3, "reps": "8-10", "rest": "60s", "notes": "Standing or seated" },
+        { "id": "B2", "name": "Pull-up", "sets": 3, "reps": "AMRAP", "rest": "60s", "notes": "Superset with B1. Use assisted if needed." },
+        { "id": "C1", "name": "Cable Fly", "sets": 3, "reps": "12-15", "rest": "45s", "notes": "Squeeze at center" },
+        { "id": "C2", "name": "Face Pull", "sets": 3, "reps": "15-20", "rest": "45s", "notes": "Superset with C1" },
+        { "id": "D1", "name": "Hammer Curl", "sets": 2, "reps": "12-15", "rest": "30s", "notes": "" },
+        { "id": "D2", "name": "Overhead Tricep Extension", "sets": 2, "reps": "12-15", "rest": "30s", "notes": "Superset with D1" }
+      ],
+      "finisher": ""
+    },
+    {
+      "day": "Day 6-7",
+      "name": "REST",
+      "warmup": "",
+      "exercises": [],
+      "finisher": "Active recovery: walking, stretching, light activity. Don't be a couch potato."
+    }
+  ],
+  "progression": {
+    "rule": "When you hit the top of the rep range for all sets, increase weight by 2.5-5kg next session",
+    "example": "Squat 80kg 4x8 → next session try 82.5kg or 85kg"
+  },
+  "nutrition_tips": [
+    "Caloric deficit 300-500 kcal/day for fat loss",
+    "Protein: 1.8-2.2g per kg bodyweight (protect muscle)",
+    "Don't skip carbs entirely - you need fuel to train hard",
+    "Track your food for at least 2 weeks to understand portions"
+  ]
+}

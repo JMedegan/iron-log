@@ -34,6 +34,7 @@ function setupNavigation() {
             if (view === 'history') loadHistory();
             if (view === 'stats') loadStats();
             if (view === 'exercises') loadExerciseList();
+            if (view === 'plan') loadPlan();
         });
     });
 }
@@ -511,6 +512,73 @@ function setupExport() {
         
         URL.revokeObjectURL(url);
     });
+}
+
+// Plan view
+async function loadPlan() {
+    try {
+        const response = await fetch('plans/fat-loss-muscle.json');
+        const plan = await response.json();
+        renderPlan(plan);
+    } catch (e) {
+        document.getElementById('plan-days').innerHTML = '<div class="empty-state"><span>📋</span><p>No plan loaded</p></div>';
+    }
+}
+
+function renderPlan(plan) {
+    const container = document.getElementById('plan-days');
+    
+    container.innerHTML = plan.days.map((day, idx) => {
+        if (day.exercises.length === 0) {
+            // Rest day
+            return `
+                <div class="plan-day">
+                    <div class="plan-day-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <h3>${day.day}: ${day.name}</h3>
+                        <span>🛋️</span>
+                    </div>
+                    <div class="plan-day-content">
+                        <div class="plan-rest-day">
+                            <span>😴</span>
+                            ${day.finisher || 'Rest and recover!'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        return `
+            <div class="plan-day ${idx === 0 ? 'expanded' : ''}">
+                <div class="plan-day-header" onclick="this.parentElement.classList.toggle('expanded')">
+                    <h3>${day.day}: ${day.name}</h3>
+                    <span>${day.exercises.length} exercises</span>
+                </div>
+                <div class="plan-day-content">
+                    ${day.warmup ? `<div class="plan-warmup">🔥 Warmup: ${day.warmup}</div>` : ''}
+                    ${day.exercises.map(ex => `
+                        <div class="plan-exercise">
+                            <span class="plan-exercise-id">${ex.id}</span>
+                            <div class="plan-exercise-details">
+                                <div class="plan-exercise-name">${ex.name}</div>
+                                <div class="plan-exercise-sets">${ex.sets} sets × ${ex.reps} reps • Rest ${ex.rest}</div>
+                                ${ex.notes ? `<div class="plan-exercise-notes">${ex.notes}</div>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                    ${day.finisher ? `<div class="plan-finisher">🏁 ${day.finisher}</div>` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    // Tips
+    const tipsContainer = document.getElementById('plan-tips');
+    tipsContainer.innerHTML = `
+        <h3>📝 Nutrition Tips</h3>
+        <ul>
+            ${plan.nutrition_tips.map(tip => `<li>${tip}</li>`).join('')}
+        </ul>
+    `;
 }
 
 // Service worker

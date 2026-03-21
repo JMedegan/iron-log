@@ -455,6 +455,156 @@ input[type="range"] {
     overflow-y: auto;
 }
 
+/* Plan view */
+#plan-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#plan-header h2 {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.plan-meta {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.plan-day {
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.plan-day-header {
+    background: var(--bg-input);
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.plan-day-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.plan-day-header span {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.plan-day-content {
+    padding: 16px;
+    display: none;
+}
+
+.plan-day.expanded .plan-day-content {
+    display: block;
+}
+
+.plan-warmup {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--bg-input);
+}
+
+.plan-exercise {
+    display: flex;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--bg-input);
+    gap: 12px;
+}
+
+.plan-exercise:last-of-type {
+    border-bottom: none;
+}
+
+.plan-exercise-id {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.85rem;
+    min-width: 30px;
+}
+
+.plan-exercise-details {
+    flex: 1;
+}
+
+.plan-exercise-name {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.plan-exercise-sets {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.plan-exercise-notes {
+    color: var(--accent-light);
+    font-size: 0.8rem;
+    font-style: italic;
+    margin-top: 4px;
+}
+
+.plan-finisher {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--bg-input);
+    color: var(--success);
+    font-size: 0.9rem;
+}
+
+.plan-rest-day {
+    padding: 20px 16px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.plan-rest-day span {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+#plan-tips {
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-top: 20px;
+}
+
+#plan-tips h3 {
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+#plan-tips ul {
+    list-style: none;
+    padding: 0;
+}
+
+#plan-tips li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--bg-input);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+#plan-tips li:last-child {
+    border-bottom: none;
+}
+
+#plan-tips li::before {
+    content: "💡 ";
+}
+
 /* Empty state */
 .empty-state {
     text-align: center;

@@ -22,9 +22,9 @@
         <!-- Navigation -->
         <nav>
             <button class="nav-btn active" data-view="log">Log</button>
+            <button class="nav-btn" data-view="plan">Plan</button>
             <button class="nav-btn" data-view="history">History</button>
             <button class="nav-btn" data-view="stats">Stats</button>
-            <button class="nav-btn" data-view="exercises">Exercises</button>
         </nav>
 
         <!-- Log View -->
@@ -38,6 +38,16 @@
             <div id="workout-entries"></div>
             
             <button id="addExercise" class="primary-btn">+ Add Exercise</button>
+        </section>
+
+        <!-- Plan View -->
+        <section id="plan-view" class="view">
+            <div id="plan-header">
+                <h2>🎯 Fat Loss + Muscle</h2>
+                <p class="plan-meta">4 days/week • ~55 min/session • Upper/Lower Split</p>
+            </div>
+            <div id="plan-days"></div>
+            <div id="plan-tips"></div>
         </section>
 
         <!-- History View -->
