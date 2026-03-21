@@ -262,9 +262,8 @@ class IronDB {
             request.onerror = () => reject(request.error);
         });
     }
-}
 
-// Default exercises list (for reset)
+    // Default exercises list (for reset)
     getDefaultExercises() {
         return [
             // Chest
