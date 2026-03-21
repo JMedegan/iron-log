@@ -21,33 +21,42 @@
 
         <!-- Navigation -->
         <nav>
-            <button class="nav-btn active" data-view="log">Log</button>
-            <button class="nav-btn" data-view="plan">Plan</button>
+            <button class="nav-btn active" data-view="workout">Workout</button>
+            <button class="nav-btn" data-view="history">History</button>
             <button class="nav-btn" data-view="stats">Stats</button>
-            <button class="nav-btn" data-view="exercises">⚙️</button>
+            <button class="nav-btn" data-view="settings">⚙️</button>
         </nav>
 
-        <!-- Log View -->
-        <section id="log-view" class="view active">
-            <div class="date-picker">
-                <button id="prevDay" class="icon-btn">◀</button>
+        <!-- Workout View (Main) -->
+        <section id="workout-view" class="view active">
+            <!-- Day Selector -->
+            <div class="day-selector">
+                <select id="daySelect">
+                    <option value="0">Day 1: Lower A (Quad Focus)</option>
+                    <option value="1">Day 2: Upper A (Push Focus)</option>
+                    <option value="3">Day 3: Lower B (Hip/Posterior)</option>
+                    <option value="4">Day 4: Upper B (Pull Focus)</option>
+                </select>
                 <input type="date" id="workoutDate">
-                <button id="nextDay" class="icon-btn">▶</button>
             </div>
-            
-            <div id="workout-entries"></div>
-            
-            <button id="addExercise" class="primary-btn">+ Add Exercise</button>
-        </section>
 
-        <!-- Plan View -->
-        <section id="plan-view" class="view">
-            <div id="plan-header">
-                <h2>🎯 Fat Loss + Muscle</h2>
-                <p class="plan-meta">4 days/week • ~55 min/session • Upper/Lower Split</p>
+            <!-- Warmup -->
+            <div id="warmup-card" class="warmup-card">
+                <span class="warmup-icon">🔥</span>
+                <span id="warmup-text">Loading...</span>
             </div>
-            <div id="plan-days"></div>
-            <div id="plan-tips"></div>
+
+            <!-- Exercise List -->
+            <div id="workout-exercises"></div>
+
+            <!-- Finisher -->
+            <div id="finisher-card" class="finisher-card" style="display:none;">
+                <span class="finisher-icon">🏁</span>
+                <span id="finisher-text"></span>
+            </div>
+
+            <!-- Complete Workout -->
+            <button id="completeWorkout" class="complete-btn">✅ Complete Workout</button>
         </section>
 
         <!-- History View -->
@@ -79,53 +88,69 @@
             </div>
         </section>
 
-        <!-- Exercises View -->
-        <section id="exercises-view" class="view">
-            <input type="text" id="exerciseSearch" placeholder="Search or add exercise...">
+        <!-- Settings View -->
+        <section id="settings-view" class="view">
+            <h2>Exercises</h2>
+            <input type="text" id="exerciseSearch" placeholder="Search exercises...">
             <div id="exercise-list"></div>
             <button id="addCustomExercise" class="secondary-btn">+ Add Custom Exercise</button>
-            <button id="resetExercises" class="secondary-btn" style="margin-top: 8px; background: #e94560;">🔄 Reset to Default Exercises</button>
+            <button id="resetExercises" class="secondary-btn danger">🔄 Reset to Defaults</button>
         </section>
 
-        <!-- Add Exercise Modal -->
-        <div id="exerciseModal" class="modal">
-            <div class="modal-content">
-                <h2>Select Exercise</h2>
-                <input type="text" id="modalExerciseSearch" placeholder="Search...">
-                <div id="modalExerciseList"></div>
-                <button class="secondary-btn close-modal">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Add Set Modal -->
+        <!-- Set Modal -->
         <div id="setModal" class="modal">
             <div class="modal-content">
-                <h2 id="setModalTitle">Add Set</h2>
+                <h2 id="setModalTitle">Log Set</h2>
+                <div class="set-history" id="setHistory"></div>
                 <div class="input-group">
                     <label>Weight (kg)</label>
                     <div class="stepper">
-                        <button class="stepper-btn" data-delta="-2.5">-</button>
+                        <button class="stepper-btn" data-input="setWeight" data-delta="-5">-5</button>
+                        <button class="stepper-btn" data-input="setWeight" data-delta="-2.5">-</button>
                         <input type="number" id="setWeight" step="0.5" min="0" value="20">
-                        <button class="stepper-btn" data-delta="2.5">+</button>
+                        <button class="stepper-btn" data-input="setWeight" data-delta="2.5">+</button>
+                        <button class="stepper-btn" data-input="setWeight" data-delta="5">+5</button>
                     </div>
                 </div>
                 <div class="input-group">
                     <label>Reps</label>
                     <div class="stepper">
-                        <button class="stepper-btn" data-delta="-1">-</button>
+                        <button class="stepper-btn" data-input="setReps" data-delta="-5">-5</button>
+                        <button class="stepper-btn" data-input="setReps" data-delta="-1">-</button>
                         <input type="number" id="setReps" step="1" min="1" value="10">
-                        <button class="stepper-btn" data-delta="1">+</button>
+                        <button class="stepper-btn" data-input="setReps" data-delta="1">+</button>
+                        <button class="stepper-btn" data-input="setReps" data-delta="5">+5</button>
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>RPE (optional)</label>
-                    <input type="range" id="setRPE" min="5" max="10" step="0.5" value="7">
-                    <span id="rpeValue">7</span>
+                    <label>RPE (Rate of Perceived Exertion)</label>
+                    <div class="rpe-selector" id="rpeSelector">
+                        <button class="rpe-btn" data-rpe="6">6</button>
+                        <button class="rpe-btn" data-rpe="7">7</button>
+                        <button class="rpe-btn" data-rpe="8">8</button>
+                        <button class="rpe-btn" data-rpe="9">9</button>
+                        <button class="rpe-btn" data-rpe="10">10</button>
+                    </div>
                 </div>
                 <div class="modal-actions">
                     <button class="secondary-btn close-modal">Cancel</button>
                     <button id="saveSet" class="primary-btn">Save Set</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Rest Timer Modal -->
+        <div id="restModal" class="modal">
+            <div class="modal-content rest-modal-content">
+                <div class="rest-timer-display">
+                    <span id="restTime">60</span>
+                    <span class="rest-label">seconds</span>
+                </div>
+                <div class="rest-actions">
+                    <button class="rest-btn" data-add="-15">-15s</button>
+                    <button class="rest-btn" data-add="15">+15s</button>
+                </div>
+                <button id="skipRest" class="secondary-btn">Skip</button>
             </div>
         </div>
     </div>
