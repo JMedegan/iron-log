@@ -8,6 +8,8 @@ let exercises = [];
 let volumeChart = null;
 let restTimer = null;
 let restSeconds = 60;
+let editingSet = null; // Track if we're editing a set
+let wakeLock = null; // Keep screen awake during timer
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
@@ -123,6 +125,35 @@ async function loadWorkoutForDay() {
     renderWorkout();
 }
 
+// Plate Calculator - Calculate plates needed for a target weight
+function calculatePlates(targetWeight) {
+    // Assuming Olympic bar (20kg) and standard plate pairs
+    const barWeight = 20;
+    if (targetWeight <= barWeight) return 'Bar only';
+    
+    let remaining = (targetWeight - barWeight) / 2; // Per side
+    const plates = [];
+    const availablePlates = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5];
+    
+    for (const plate of availablePlates) {
+        while (remaining >= plate) {
+            plates.push(plate);
+            remaining -= plate;
+        }
+    }
+    
+    if (plates.length === 0) return 'Bar only';
+    
+    // Group plates
+    const grouped = {};
+    plates.forEach(p => grouped[p] = (grouped[p] || 0) + 1);
+    
+    return Object.entries(grouped)
+        .sort((a, b) => parseFloat(b[0]) - parseFloat(a[0]))
+        .map(([weight, count]) => `${weight}kg×${count}`)
+        .join(' + ');
+}
+
 // Render workout
 function renderWorkout() {
     const container = document.getElementById('workout-exercises');
@@ -150,12 +181,13 @@ function renderWorkout() {
                 </div>
                 <div class="sets-container">
                     ${exercise.sets.map((set, setIndex) => `
-                        <div class="logged-set">
+                        <div class="logged-set" onclick="openEditModal(${exIndex}, ${setIndex})">
                             <div class="set-number">${setIndex + 1}</div>
                             <div class="set-details">${set.weight} kg × ${set.reps}</div>
                             ${set.rpe ? `<div class="set-rpe">RPE ${set.rpe}</div>` : ''}
-                            <button class="delete-set" onclick="deleteSet(${exIndex}, ${setIndex})">✕</button>
+                            <button class="delete-set" onclick="event.stopPropagation(); deleteSet(${exIndex}, ${setIndex})">✕</button>
                         </div>
+                        ${set.weight > 20 ? `<div class="plate-calc"><span class="plate-calc-icon">🏋️</span><span class="plate-calc-text">${calculatePlates(set.weight)}</span></div>` : ''}
                     `).join('')}
                     <button class="add-set-btn" onclick="openSetModal(${exIndex})">+ Log Set</button>
                 </div>
@@ -221,10 +253,12 @@ function setupModals() {
 }
 
 function openSetModal(exerciseIndex) {
+    editingSet = null; // New set, not editing
     currentExerciseIndex = exerciseIndex;
     const exercise = currentWorkout.exercises[exerciseIndex];
     
     document.getElementById('setModalTitle').textContent = exercise.name;
+    document.getElementById('saveSet').textContent = 'Save Set';
     
     // Show last set values or previous workout
     const historyDiv = document.getElementById('setHistory');
@@ -233,12 +267,38 @@ function openSetModal(exerciseIndex) {
         historyDiv.innerHTML = `<strong>Last set:</strong> ${lastSet.weight} kg × ${lastSet.reps}`;
         document.getElementById('setWeight').value = lastSet.weight;
         document.getElementById('setReps').value = lastSet.reps;
+        if (lastSet.rpe) {
+            document.querySelectorAll('.rpe-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.rpe == lastSet.rpe);
+            });
+        }
     } else {
         historyDiv.innerHTML = `<strong>Target:</strong> ${exercise.prescription}`;
+        document.getElementById('setWeight').value = 20;
+        document.getElementById('setReps').value = 10;
+        document.querySelectorAll('.rpe-btn').forEach(b => b.classList.remove('active'));
     }
     
-    // Reset RPE
-    document.querySelectorAll('.rpe-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('setModal').classList.add('active');
+}
+
+function openEditModal(exerciseIndex, setIndex) {
+    editingSet = { exerciseIndex, setIndex };
+    currentExerciseIndex = exerciseIndex;
+    const exercise = currentWorkout.exercises[exerciseIndex];
+    const set = exercise.sets[setIndex];
+    
+    document.getElementById('setModalTitle').textContent = `Edit Set ${setIndex + 1} - ${exercise.name}`;
+    document.getElementById('saveSet').textContent = 'Update Set';
+    
+    document.getElementById('setWeight').value = set.weight;
+    document.getElementById('setReps').value = set.reps;
+    document.getElementById('setHistory').innerHTML = '<strong>Editing this set</strong>';
+    
+    // Set RPE if exists
+    document.querySelectorAll('.rpe-btn').forEach(b => {
+        b.classList.toggle('active', set.rpe && b.dataset.rpe == set.rpe);
+    });
     
     document.getElementById('setModal').classList.add('active');
 }
@@ -254,35 +314,132 @@ function saveSet() {
         return;
     }
     
-    const set = { weight, reps, timestamp: Date.now() };
-    if (rpe) set.rpe = rpe;
+    if (editingSet) {
+        // Update existing set
+        const set = currentWorkout.exercises[editingSet.exerciseIndex].sets[editingSet.setIndex];
+        set.weight = weight;
+        set.reps = reps;
+        if (rpe) set.rpe = rpe;
+        else delete set.rpe;
+        set.editedAt = Date.now();
+    } else {
+        // Add new set
+        const set = { weight, reps, timestamp: Date.now() };
+        if (rpe) set.rpe = rpe;
+        currentWorkout.exercises[currentExerciseIndex].sets.push(set);
+    }
     
-    currentWorkout.exercises[currentExerciseIndex].sets.push(set);
     saveCurrentWorkout();
     closeModals();
     renderWorkout();
     
-    // Start rest timer
-    const exercise = currentWorkout.exercises[currentExerciseIndex];
-    restSeconds = exercise.restTime;
-    startRestTimer();
+    // Start rest timer only for new sets
+    if (!editingSet) {
+        const exercise = currentWorkout.exercises[currentExerciseIndex];
+        restSeconds = exercise.restTime;
+        startRestTimer();
+    }
+    
+    editingSet = null;
+}
+
+// Audio context for timer beep
+let audioContext = null;
+
+function playBeep() {
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+    gainNode.gain.value = 0.5;
+    
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.2);
+}
+
+async function requestWakeLock() {
+    try {
+        if ('wakeLock' in navigator) {
+            wakeLock = await navigator.wakeLock.request('screen');
+            console.log('Wake lock acquired');
+        }
+    } catch (err) {
+        console.log('Wake lock not available:', err);
+    }
+}
+
+function releaseWakeLock() {
+    if (wakeLock) {
+        wakeLock.release();
+        wakeLock = null;
+        console.log('Wake lock released');
+    }
 }
 
 function startRestTimer() {
     document.getElementById('restTime').textContent = restSeconds;
     document.getElementById('restModal').classList.add('active');
     
+    // Keep screen awake
+    requestWakeLock();
+    
+    // Play initial beep
+    playBeep();
+    
+    // Handle page visibility changes
+    let hiddenTime = null;
+    const handleVisibilityChange = () => {
+        if (document.hidden) {
+            hiddenTime = Date.now();
+        } else if (hiddenTime) {
+            // Page became visible again - adjust timer
+            const elapsed = Math.floor((Date.now() - hiddenTime) / 1000);
+            restSeconds = Math.max(0, restSeconds - elapsed);
+            document.getElementById('restTime').textContent = restSeconds;
+            hiddenTime = null;
+            
+            if (restSeconds <= 0) {
+                clearInterval(restTimer);
+                finishRestTimer();
+            }
+        }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
     restTimer = setInterval(() => {
         restSeconds--;
         document.getElementById('restTime').textContent = restSeconds;
         
+        // Beep at 10, 5, 4, 3, 2, 1 seconds
+        if (restSeconds <= 10 && restSeconds > 0) {
+            playBeep();
+        }
+        
         if (restSeconds <= 0) {
             clearInterval(restTimer);
-            // Vibrate if supported
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            closeModals();
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            finishRestTimer();
         }
     }, 1000);
+}
+
+function finishRestTimer() {
+    // Final beep pattern
+    playBeep();
+    setTimeout(playBeep, 200);
+    setTimeout(playBeep, 400);
+    
+    // Vibrate if supported
+    if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+    
+    releaseWakeLock();
+    closeModals();
 }
 
 function deleteSet(exerciseIndex, setIndex) {
@@ -293,7 +450,12 @@ function deleteSet(exerciseIndex, setIndex) {
 
 function closeModals() {
     document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-    if (restTimer) clearInterval(restTimer);
+    if (restTimer) {
+        clearInterval(restTimer);
+        restTimer = null;
+    }
+    releaseWakeLock();
+    editingSet = null;
 }
 
 async function saveCurrentWorkout() {

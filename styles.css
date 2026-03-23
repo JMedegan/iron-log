@@ -307,6 +307,36 @@ nav {
     padding: 4px 8px;
 }
 
+.logged-set {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.logged-set:hover {
+    background: var(--bg-dark);
+}
+
+/* Plate Calculator */
+.plate-calc {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(15, 52, 96, 0.5);
+    border-radius: 6px;
+    margin: -4px 0 8px 52px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.plate-calc-icon {
+    font-size: 1rem;
+}
+
+.plate-calc-text {
+    font-weight: 500;
+}
+
 .add-set-btn {
     width: 100%;
     padding: 12px;
